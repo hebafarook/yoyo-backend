@@ -6,9 +6,11 @@ from routes.training_routes import router as training_router
 
 load_dotenv()
 
-app = FastAPI(title="YoYo Elite Soccer AI",
-              description="Backend for assessments and AI training programs",
-              version="1.0.0")
+app = FastAPI(
+    title="YoYo Elite Soccer AI",
+    description="Backend for assessments and AI training programs",
+    version="1.0.0"
+)
 
 origins = os.getenv("CORS_ORIGINS", "*").split(",")
 
