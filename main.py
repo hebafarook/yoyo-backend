@@ -2,7 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
+
+# OLD: you already had this
 from routes.training_routes import router as training_router
+
+# NEW: only if you created these files
+from routes.assessment_routes import router as assessment_router
+from routes.player_routes import router as player_router
 
 load_dotenv()
 
@@ -26,7 +32,14 @@ app.add_middleware(
 async def health():
     return {"status": "ok"}
 
+
+# ===== OLD BEHAVIOR (still here) =====
 app.include_router(training_router, prefix="/api", tags=["training"])
+
+# ===== NEW ROUTES (only work if files exist) =====
+app.include_router(player_router, prefix="/api", tags=["players"])
+app.include_router(assessment_router, prefix="/api", tags=["assessments"])
+
 
 if __name__ == "__main__":
     import uvicorn
