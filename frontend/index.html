@@ -5,29 +5,179 @@
   <title>YoYo Elite Soccer AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="app-container">
-    <header>
-      <h1>YoYo Elite Soccer AI</h1>
-      <p>Generate a 4-week personalized training program from the latest assessment.</p>
-    </header>
 
-    <main>
-      <section class="form-section">
-        <label for="playerId">Player ID</label>
-        <input id="playerId" type="text" placeholder="Enter player ID (e.g. player123)" />
+    <!-- ========== LANDING / ROLE SELECTION ==========
+    -->
+    <div id="view-landing">
+      <header class="centered-header">
+        <h1>YoYo Elite Soccer AI</h1>
+        <p>Smart performance dashboards for players, coaches, and parents.</p>
+      </header>
 
-        <button id="generateBtn">Generate Training Program</button>
+      <section class="role-cards">
+        <div class="role-card">
+          <h2>Player Portal</h2>
+          <p>View your reports, programs, awards and messages from your coach.</p>
+          <button id="playerPortalBtn">Player Login</button>
+        </div>
 
-        <p id="statusMessage" class="status"></p>
+        <div class="role-card">
+          <h2>Coach Portal</h2>
+          <p>Manage squads, assessments and training plans.</p>
+          <button disabled>Coming soon</button>
+        </div>
+
+        <div class="role-card">
+          <h2>Parent Portal</h2>
+          <p>Track your child’s progress, attendance and reports.</p>
+          <button disabled>Coming soon</button>
+        </div>
       </section>
+    </div>
 
-      <section class="output-section">
-        <h2>Training Program</h2>
-        <pre id="programOutput" class="program-output"></pre>
+    <!-- ========== PLAYER AUTH VIEW ==========
+    -->
+    <div id="view-player-auth" class="hidden">
+      <header class="centered-header">
+        <h1>Player Login</h1>
+        <p>Log in or register to access your YoYo dashboard.</p>
+      </header>
+
+      <section class="form-section narrow">
+        <label for="playerIdAuth">Player ID</label>
+        <input id="playerIdAuth" type="text" placeholder="e.g. liam16" />
+
+        <label for="playerNameAuth">Player Name</label>
+        <input id="playerNameAuth" type="text" placeholder="Full name" />
+
+        <label for="playerAgeAuth">Age</label>
+        <input id="playerAgeAuth" type="number" min="5" max="50" />
+
+        <label for="playerPositionAuth">Position</label>
+        <input id="playerPositionAuth" type="text" placeholder="Midfielder, Striker..." />
+
+        <label for="playerFootAuth">Dominant Foot</label>
+        <input id="playerFootAuth" type="text" placeholder="Right, Left, Both" />
+
+        <!-- For real app this becomes password; for now it’s just stored client-side -->
+        <label for="playerPasswordAuth">Password (demo only)</label>
+        <input id="playerPasswordAuth" type="password" />
+
+        <div class="auth-buttons">
+          <button id="playerLoginBtn">Log in</button>
+          <button id="playerRegisterBtn" class="outline">Register (demo)</button>
+        </div>
+
+        <p id="authStatus" class="status"></p>
       </section>
-    </main>
+    </div>
+
+    <!-- ========== PLAYER DASHBOARD VIEW ==========
+    -->
+    <div id="view-player-dashboard" class="hidden">
+      <header class="dashboard-header">
+        <div>
+          <h1>Player Dashboard</h1>
+          <p id="playerWelcomeText"></p>
+        </div>
+        <div class="header-right">
+          <span id="playerProfileMini"></span>
+          <button id="logoutBtn" class="outline small">Log out</button>
+        </div>
+      </header>
+
+      <nav class="tabs">
+        <button data-tab="home" class="tab-btn active">Home</button>
+        <button data-tab="report" class="tab-btn">Report</button>
+        <button data-tab="program" class="tab-btn">Program</button>
+        <button data-tab="awards" class="tab-btn">Awards</button>
+        <button data-tab="assessment" class="tab-btn">Assessments</button>
+        <button data-tab="comments" class="tab-btn">Coach Comments</button>
+        <button data-tab="inbox" class="tab-btn">Inbox</button>
+        <button data-tab="profile" class="tab-btn">Profile</button>
+      </nav>
+
+      <main class="dashboard-main">
+        <!-- HOME TAB -->
+        <section id="tab-home" class="tab-view">
+          <h2>Welcome back</h2>
+          <p>Here you’ll see your latest score snapshot and quick links.</p>
+          <div id="homeSummary"></div>
+        </section>
+
+        <!-- REPORT TAB -->
+        <section id="tab-report" class="tab-view hidden">
+          <h2>Performance Report</h2>
+          <p>Your latest YoYo assessment, gauges and trend.</p>
+
+          <div class="metrics-grid" id="metricsGrid"></div>
+
+          <div class="trend-section">
+            <h3>Assessment Trend</h3>
+            <canvas id="trendChart"></canvas>
+          </div>
+
+          <div class="summary-columns">
+            <div>
+              <h3>Strengths</h3>
+              <ul id="strengthsList"></ul>
+            </div>
+            <div>
+              <h3>Weaknesses</h3>
+              <ul id="weaknessesList"></ul>
+            </div>
+            <div>
+              <h3>Recommendations</h3>
+              <ul id="recommendationsList"></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- PROGRAM TAB -->
+        <section id="tab-program" class="tab-view hidden">
+          <h2>AI Training Program</h2>
+          <button id="generateProgramBtn">Generate / Refresh Program</button>
+          <p class="status" id="programStatus"></p>
+          <pre id="programOutput" class="program-output"></pre>
+        </section>
+
+        <!-- PLACEHOLDERS FOR FUTURE TABS -->
+        <section id="tab-awards" class="tab-view hidden">
+          <h2>Awards</h2>
+          <p>Medals, badges and achievement history (to be implemented).</p>
+        </section>
+
+        <section id="tab-assessment" class="tab-view hidden">
+          <h2>Assessments</h2>
+          <p>List and input assessments (coach-facing form coming next).</p>
+        </section>
+
+        <section id="tab-comments" class="tab-view hidden">
+          <h2>Coach Comments</h2>
+          <p>Feedback and notes from your coach (to be implemented).</p>
+        </section>
+
+        <section id="tab-inbox" class="tab-view hidden">
+          <h2>Inbox</h2>
+          <p>Messages and notifications (to be implemented).</p>
+        </section>
+
+        <section id="tab-profile" class="tab-view hidden">
+          <h2>Profile</h2>
+          <div id="profileDetails"></div>
+          <p class="muted">
+            In a real build, password reset + email verification would live here.
+          </p>
+        </section>
+      </main>
+
+      <p id="statusMessage" class="status global-status"></p>
+    </div>
+
   </div>
 
   <script src="app.js"></script>
