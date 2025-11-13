@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YoYo Elite Soccer AI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>YoYo Elite Soccer AI</h1>
+      <p>Generate a 4-week personalized training program from the latest assessment.</p>
+    </header>
+
+    <main>
+      <section class="form-section">
+        <label for="playerId">Player ID</label>
+        <input id="playerId" type="text" placeholder="Enter player ID (e.g. player123)" />
+
+        <button id="generateBtn">Generate Training Program</button>
+
+        <p id="statusMessage" class="status"></p>
+      </section>
+
+      <section class="output-section">
+        <h2>Training Program</h2>
+        <pre id="programOutput" class="program-output"></pre>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
